@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, KeyboardAvoidingView } from "react-native";
+import React from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import { withAuthenticator } from "aws-amplify-react-native";
 import { Amplify } from "aws-amplify";
 import { NavigationContainer } from "@react-navigation/native";
@@ -41,12 +41,4 @@ const App = () => {
     </>
   );
 };
-const styles = StyleSheet.create({
-  addButton: {
-    marginRight: 20,
-  },
-  logOutBtn: {
-    marginLeft: 10,
-  },
-});
 export default withAuthenticator(App);
