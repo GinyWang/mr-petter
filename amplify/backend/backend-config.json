@@ -28,5 +28,23 @@
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
     }
+  },
+  "geo": {
+    "PetMap": {
+      "accessType": "AuthorizedUsers",
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "team07bcf248f8"
+        }
+      ],
+      "isDefault": true,
+      "mapStyle": "VectorEsriNavigation",
+      "providerPlugin": "awscloudformation",
+      "service": "Map"
+    }
   }
 }
