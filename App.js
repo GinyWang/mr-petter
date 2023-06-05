@@ -22,14 +22,14 @@ const App = () => {
       setCredentials(await Auth.currentUserCredentials());
     };
     const createLocationClient = async () => {
-      // const credentials = await Auth.currentCredentials();
+      const credentials = await Auth.currentCredentials();
       const client = new LocationClient({
-        // credentials,
+        credentials,
         region: awsExports.aws_project_region,
       });
-      setLocationClient(locationClient);
+      setLocationClient(() => client);
+      console.log("locationClient", client);
     };
-
     fetchCredentials();
     createLocationClient();
   }, []);

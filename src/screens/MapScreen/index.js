@@ -4,10 +4,12 @@ import { Text } from "react-native-paper";
 import { GetDevicePositionCommand } from "@aws-sdk/client-location";
 //components
 import Map from "./map";
+import { LimitTimerRaceResolvedValues } from "@aws-amplify/datastore";
 
 //todo: getUserLocation
 const TrackerName = "PetTracker";
 const DeviceId = "device";
+
 //todo: temp const
 const initRegion = {
   latitude: 37.78825,
@@ -39,6 +41,7 @@ const petMarkers = [
 const MapScreen = (props) => {
   const { locationClient } = props;
   const [consoleText, setConsoleText] = useState("MapScreen" + "\n");
+  const [petLocation, setPetLocation] = useState({});
 
   useEffect(() => {
     trackPet();
@@ -53,19 +56,27 @@ const MapScreen = (props) => {
       TrackerName,
       DeviceId,
     };
+    //todo:use promise
     const command = new GetDevicePositionCommand(input);
+    console.log(locationClient);
     const response = await locationClient.send(command);
-
+    //todo: verify timestamp
+    setPetLocation(() => {
+      latitude: response.Position[0];
+      longitude: response.Position[1];
+      sampleTime: response.SampleTime;
+    });
     setConsoleText(
-      (t) => t + `trackPet${response ? (response[0], response[1]) : "None"}\n`
+      (t) => t + `trackPet${response.Position ? response.Position[1] : "None"}`
     );
     console.log(response);
+    console.log({ petLocation });
   };
 
   return (
     <SafeAreaView>
       <Text>{consoleText}</Text>
-      <Map region={initRegion} myMarker={myMarker} petMarkers={petMarkers} />
+      <Map region={initRegion} petLocation={petLocation} />
     </SafeAreaView>
   );
 };
