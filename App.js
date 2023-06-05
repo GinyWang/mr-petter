@@ -5,13 +5,15 @@ import awsExports from "./src/aws-exports";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LocationClient } from "@aws-sdk/client-location";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+
 //components
 import HomeScreen from "./src/screens/HomeScreen";
 import MapScreen from "./src/screens/MapScreen";
 
 Amplify.configure(awsExports);
-
-const screens = [{ name: "MapScreen", component: MapScreen }];
+const Tab = createBottomTabNavigator();
 
 const App = () => {
   const [credentials, setCredentials] = useState(null);
@@ -34,28 +36,18 @@ const App = () => {
     createLocationClient();
   }, []);
 
-  const Stack = createStackNavigator();
-
   return (
-    <SafeAreaProvider>
-      <MapScreen locationClient={locationClient} />
-      {/* <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? -64 : 0}
-          style={{ flex: 2 }}
-        >
-          <Stack.Navigator initialRouteName="MapScreen">
-            {screens.map((screen) => (
-              <Stack.Screen
-                key={screen.name}
-                name={screen.name}
-                component={screen.component}
-                options={{ headerShown: false }}
-              />
-            ))}
-          </Stack.Navigator>
-        </KeyboardAvoidingView> */}
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <SafeAreaProvider>
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen
+            name="Map"
+            children={() => <MapScreen locationClient={locationClient} />}
+          />
+        </Tab.Navigator>
+      </SafeAreaProvider>
+    </NavigationContainer>
   );
 };
 export default withAuthenticator(App);
