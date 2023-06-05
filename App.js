@@ -1,13 +1,10 @@
-import "react-native-gesture-handler";
-import React from "react";
-import { KeyboardAvoidingView, Platform, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { withAuthenticator } from "aws-amplify-react-native";
-import { Amplify } from "aws-amplify";
-import { NavigationContainer } from "@react-navigation/native";
+import { Amplify, Auth } from "aws-amplify";
 import awsExports from "./src/aws-exports";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createStackNavigator } from "@react-navigation/stack";
-import { ThemeProvider } from "@aws-amplify/ui-react";
+import { LocationClient } from "@aws-sdk/client-location";
 //components
 import HomeScreen from "./src/screens/HomeScreen";
 import MapScreen from "./src/screens/MapScreen";
@@ -17,11 +14,32 @@ Amplify.configure(awsExports);
 const screens = [{ name: "MapScreen", component: MapScreen }];
 
 const App = () => {
+  const [credentials, setCredentials] = useState(null);
+  const [locationClient, setLocationClient] = useState(null);
+
+  useEffect(() => {
+    const fetchCredentials = async () => {
+      setCredentials(await Auth.currentUserCredentials());
+    };
+    const createLocationClient = async () => {
+      // const credentials = await Auth.currentCredentials();
+      const client = new LocationClient({
+        // credentials,
+        region: awsExports.aws_project_region,
+      });
+      setLocationClient(locationClient);
+    };
+
+    fetchCredentials();
+    createLocationClient();
+  }, []);
+
   const Stack = createStackNavigator();
+
   return (
-    <NavigationContainer>
-      <SafeAreaProvider>
-        <KeyboardAvoidingView
+    <SafeAreaProvider>
+      <MapScreen locationClient={locationClient} />
+      {/* <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? -64 : 0}
           style={{ flex: 2 }}
@@ -36,9 +54,8 @@ const App = () => {
               />
             ))}
           </Stack.Navigator>
-        </KeyboardAvoidingView>
-      </SafeAreaProvider>
-    </NavigationContainer>
+        </KeyboardAvoidingView> */}
+    </SafeAreaProvider>
   );
 };
 export default withAuthenticator(App);
