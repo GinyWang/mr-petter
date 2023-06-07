@@ -46,7 +46,10 @@ const App = () => {
             name="Map"
             children={() => <MapScreen locationClient={locationClient} />}
           />
-          <Tab.Screen name="Audio" component={AudioScreen} />
+          <Tab.Screen
+            name="Audio"
+            children={() => <AudioScreen credentials={credentials} />}
+          />
         </Tab.Navigator>
       </SafeAreaProvider>
     </NavigationContainer>

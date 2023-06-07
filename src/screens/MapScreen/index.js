@@ -4,7 +4,6 @@ import { Text } from "react-native-paper";
 import { GetDevicePositionCommand } from "@aws-sdk/client-location";
 //components
 import Map from "./map";
-import { LimitTimerRaceResolvedValues } from "@aws-amplify/datastore";
 
 //todo: getUserLocation
 const TrackerName = "PetTracker";
