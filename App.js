@@ -11,6 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 //components
 import HomeScreen from "./src/screens/HomeScreen";
 import MapScreen from "./src/screens/MapScreen";
+import AudioScreen from "./src/screens/AudioScreen";
 
 Amplify.configure(awsExports);
 const Tab = createBottomTabNavigator();
@@ -45,6 +46,7 @@ const App = () => {
             name="Map"
             children={() => <MapScreen locationClient={locationClient} />}
           />
+          <Tab.Screen name="Audio" component={AudioScreen} />
         </Tab.Navigator>
       </SafeAreaProvider>
     </NavigationContainer>
