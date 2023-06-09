@@ -1,36 +1,42 @@
 import { useEffect } from "react";
-import { Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-
-//todo: get user location, pet info
+import { StyleSheet, View } from "react-native";
+//todo: array of pet Locations, pet info, geo fence
 const Map = (props) => {
-  const { initRegion, petLocation } = props;
+  const { petLocation } = props;
 
   useEffect(() => {
     console.log({ petLocation });
   }, [petLocation]);
 
   return (
-    <>
+    <View style={styles.container}>
       <MapView
-        style={{ height: 700 }}
-        initialRegion={initRegion}
+        style={styles.map}
         showsUserLocation={true}
         showsMyLocationButton={true}
       >
         {petLocation && (
           <Marker
-            key="1"
             coordinate={{
-              latitude: petLocation.latitude,
-              longitude: petLocation.longitude,
+              latitude: petLocation.lat,
+              longitude: petLocation.long,
             }}
-            title="petName"
-            description={petLocation.sampleTime}
+            title={petLocation.title}
           />
         )}
       </MapView>
-    </>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: 10,
+  },
+  map: {
+    height: "100%",
+  },
+});
+
 export default Map;

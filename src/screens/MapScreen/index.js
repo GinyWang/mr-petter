@@ -1,81 +1,73 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native";
-import { Text } from "react-native-paper";
-import { GetDevicePositionCommand } from "@aws-sdk/client-location";
+import React, { useEffect, useRef, useState } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
+import { Switch, Text } from "react-native-paper";
+import {
+  GetDevicePositionCommand,
+  LocationClient,
+} from "@aws-sdk/client-location";
 //components
 import Map from "./map";
-
-//todo: getUserLocation
-const TrackerName = "PetTracker";
-const DeviceId = "device";
-
-//todo: temp const
-const initRegion = {
-  latitude: 37.78825,
-  longitude: -122.4324,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
-};
-
-const myMarker = {
-  id: 1,
-  latitude: 47.615686,
-  longitude: -122.3381659,
-  title: "Amplify Seattle",
-  description: "Amplify Seattle Visit",
-  image: "https://i.imgur.com/2nCt3Sbl.jpg",
-};
-
-const petMarkers = [
-  {
-    id: 1,
-    latitude: 47.615686,
-    longitude: -122.3381659,
-    title: "Amplify Seattle",
-    description: "Amplify Seattle Visit",
-    image: "https://i.imgur.com/2nCt3Sbl.jpg",
-  },
-];
+import { REGION, TRACKER_DEVICE_ID, TRACKER_NAME } from "../../constants";
 
 const MapScreen = (props) => {
-  const { locationClient } = props;
-  const [consoleText, setConsoleText] = useState("MapScreen" + "\n");
-  const [petLocation, setPetLocation] = useState({});
+  const { credentials } = props;
+  const [petLocation, setPetLocation] = useState(null);
+  const [locationClient, setLocationClient] = useState(null);
+  const [isTracking, setIsTracking] = useState(false);
+  const interval = useRef(null);
 
   useEffect(() => {
-    trackPet();
-    const interval = setInterval(() => {
-      trackPet();
-    }, 30000);
-    return () => clearInterval(interval);
+    const createLocationClient = async () => {
+      const client = new LocationClient({
+        credentials,
+        region: REGION,
+      });
+      setLocationClient(() => client);
+    };
+    createLocationClient();
   }, []);
 
   const trackPet = async () => {
     const input = {
-      TrackerName,
-      DeviceId,
+      TrackerName: TRACKER_NAME,
+      DeviceId: TRACKER_DEVICE_ID,
     };
-    //todo:use promise
-    const command = new GetDevicePositionCommand(input);
-    console.log(locationClient);
-    const response = await locationClient.send(command);
-    //todo: verify timestamp
-    setPetLocation(() => {
-      latitude: response.Position[0];
-      longitude: response.Position[1];
-      sampleTime: response.SampleTime;
-    });
-    setConsoleText(
-      (t) => t + `trackPet${response.Position ? response.Position[1] : "None"}`
-    );
-    console.log(response);
-    console.log({ petLocation });
+    try {
+      const command = new GetDevicePositionCommand(input);
+      const response = await locationClient.send(command);
+      console.log(response);
+      setPetLocation(() => ({
+        long: response.Position[0],
+        lat: response.Position[1],
+        time: response.SampleTime,
+        title: response.DeviceId,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const toggleTracking = () => {
+    setIsTracking((t) => !t);
+  };
+
+  useEffect(() => {
+    if (!isTracking) {
+      clearInterval(interval.current);
+      setPetLocation(null);
+    } else {
+      trackPet();
+      interval.current = setInterval(() => {
+        trackPet();
+      }, 10000);
+    }
+  }, [isTracking]);
 
   return (
     <SafeAreaView>
-      <Text>{consoleText}</Text>
-      <Map region={initRegion} petLocation={petLocation} />
+      <Text variant="headlineSmall">Start Tracking</Text>
+      <Switch value={isTracking} onValueChange={toggleTracking} />
+      <Map petLocation={petLocation} />
     </SafeAreaView>
   );
 };

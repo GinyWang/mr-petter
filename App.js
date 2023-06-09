@@ -3,8 +3,6 @@ import { withAuthenticator } from "aws-amplify-react-native";
 import { Amplify, Auth } from "aws-amplify";
 import awsExports from "./src/aws-exports";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { createStackNavigator } from "@react-navigation/stack";
-import { LocationClient } from "@aws-sdk/client-location";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -18,23 +16,16 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
   const [credentials, setCredentials] = useState(null);
-  const [locationClient, setLocationClient] = useState(null);
 
   useEffect(() => {
     const fetchCredentials = async () => {
-      setCredentials(await Auth.currentUserCredentials());
-    };
-    const createLocationClient = async () => {
-      const credentials = await Auth.currentCredentials();
-      const client = new LocationClient({
-        credentials,
-        region: awsExports.aws_project_region,
-      });
-      setLocationClient(() => client);
-      console.log("locationClient", client);
+      try {
+        setCredentials(await Auth.currentUserCredentials());
+      } catch (e) {
+        console.log(e);
+      }
     };
     fetchCredentials();
-    createLocationClient();
   }, []);
 
   return (
@@ -44,7 +35,7 @@ const App = () => {
           <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen
             name="Map"
-            children={() => <MapScreen locationClient={locationClient} />}
+            children={() => <MapScreen credentials={credentials} />}
           />
           <Tab.Screen
             name="Audio"
