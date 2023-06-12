@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { FAB } from "react-native-paper";
 
-import { AUDIO_CONTROL_LAMBDA_NAME, REGION } from "../../constants.js";
+import { PI_CONTROL_LAMBDA_NAME, REGION } from "../../constants.js";
 import { makeLambdaPayload } from "../../utils.js";
 
 const AudioControl = (props) => {
@@ -17,15 +17,18 @@ const AudioControl = (props) => {
     };
     const input = {
       // InvocationRequest
-      FunctionName: AUDIO_CONTROL_LAMBDA_NAME,
-      Payload: makeLambdaPayload({ action: msg }),
+      FunctionName: PI_CONTROL_LAMBDA_NAME,
+      Payload: makeLambdaPayload({
+        type: "interaction/music",
+        action: msg,
+      }),
     };
     try {
       const client = new LambdaClient(config);
       const command = new InvokeCommand(input);
-      const res = await client.send(command);
+      await client.send(command);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 

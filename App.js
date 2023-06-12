@@ -11,6 +11,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import MapScreen from "./src/screens/MapScreen";
 import AudioScreen from "./src/screens/AudioScreen";
 import VideoScreen from "./src/screens/VideoScreen";
+import HealthScreen from "./src/screens/HealthScreen";
 
 Amplify.configure(awsExports);
 const Tab = createBottomTabNavigator();
@@ -23,7 +24,7 @@ const App = () => {
       try {
         setCredentials(await Auth.currentUserCredentials());
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     };
     fetchCredentials();
@@ -43,6 +44,10 @@ const App = () => {
             children={() => <AudioScreen credentials={credentials} />}
           />
           <Tab.Screen name="Video" children={() => <VideoScreen />} />
+          <Tab.Screen
+            name="Health"
+            children={() => <HealthScreen credentials={credentials} />}
+          />
         </Tab.Navigator>
       </SafeAreaProvider>
     </NavigationContainer>
