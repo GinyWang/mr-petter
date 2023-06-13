@@ -5,6 +5,7 @@ import HealthCalendar from "./healthCalendar";
 import HealthControl from "./healthControl";
 import FeedDialog from "./feedDialog";
 import AddDialog from "./addDialog";
+import AddSnackBar from "./addSnackBar";
 
 const HealthScreen = (props) => {
   const { credentials } = props;
@@ -13,11 +14,17 @@ const HealthScreen = (props) => {
     REMIND: false,
     ADD: false,
   });
+  const [snackBarStatus, setSnackBarStatus] = useState({
+    visible: false,
+    content: "",
+  });
+
+  const toggleSnackBar = (v, text) => {
+    setSnackBarStatus({ visible: v, content: text });
+  };
   const showDialog = (msg) => {
     if (msg === "ADD") {
       setDialogVisible({ ...dialogVisible, ADD: true });
-    } else if (msg === "REMIND") {
-      setDialogVisible({ ...dialogVisible, REMIND: true });
     } else if (msg === "FEED") {
       setDialogVisible({ ...dialogVisible, FEED: true });
     }
@@ -25,8 +32,6 @@ const HealthScreen = (props) => {
   const hideDialog = (msg) => {
     if (msg === "ADD") {
       setDialogVisible({ ...dialogVisible, ADD: false });
-    } else if (msg === "REMIND") {
-      setDialogVisible({ ...dialogVisible, REMIND: false });
     } else if (msg === "FEED") {
       setDialogVisible({ ...dialogVisible, FEED: false });
     } else if (msg == "ALL") {
@@ -41,13 +46,19 @@ const HealthScreen = (props) => {
         <FeedDialog
           credentials={credentials}
           visible={dialogVisible["FEED"]}
+          toggleSnackBar={toggleSnackBar}
           hideDialog={hideDialog}
         />
         <AddDialog
           credentials={credentials}
           visible={dialogVisible["ADD"]}
-          // visible={true}e
+          toggleSnackBar={toggleSnackBar}
           hideDialog={hideDialog}
+        />
+        <AddSnackBar
+          visible={snackBarStatus.visible}
+          hideSnackBar={() => toggleSnackBar(false)}
+          content={snackBarStatus.content}
         />
       </SafeAreaView>
     </PaperProvider>

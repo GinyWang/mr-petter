@@ -1,60 +1,44 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { Text, Button, Dialog, Portal } from "react-native-paper";
-import { TextInput, View } from "react-native";
+import { View } from "react-native";
 import { PI_CONTROL_LAMBDA_NAME, REGION } from "../../constants.js";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { makeLambdaPayload } from "../../utils.js";
-
+import DateTimePicker from "@react-native-community/datetimepicker";
 const AddDialog = (props) => {
-  const { visible, hideDialog, credentials } = props;
+  const { visible, hideDialog, credentials, toggleSnackBar } = props;
+  const [timePicked, setTimePicked] = useState(new Date());
+
   const onPressCancel = () => {
     hideDialog("ADD");
   };
-  //   const onPressAdd = async () => {
-  //     //todo: add event
-  //     onSubmit={handleSubmit(onSubmit)}
-  //     hideDialog("ADD");
-  //   };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
-    //todo: register new event}
-    console.log(errors);
+  const onPressAdd = () => {
     hideDialog("ADD");
+    console.log(timePicked, typeof timePicked);
+    //todo: submit reminder to backend
+    toggleSnackBar(
+      true,
+      `Feeding Reminder on ${timePicked.toTimeString()} Added `
+    );
   };
 
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={hideDialog}>
         <Dialog.Title>
-          <Text>Add Event</Text>
+          <Text>Add Feeding Reminder</Text>
         </Dialog.Title>
         <Dialog.Content>
-          {/* <View>
-            <TextInput editable multiline />
-
-            <select {...register("Event", { required: true })}>
-              <option value="Feed">Feed</option>
-              <option value="Poop">Poop</option>
-              <option value="Walk">Walk</option>
-              <option value="Others">Others</option>
-            </select>
-            <Input
-              type="datetime-local"
-              placeholder="Time"
-              {...register("Time", { required: true, max: -1 })}
-            />
-            <textarea {...register("Description", {})} />
-          </View> */}
+          <Text>Every day on : </Text>
+          <DateTimePicker
+            value={new Date()}
+            mode="time"
+            onChange={(_event, date) => setTimePicked(date)}
+          />
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={onSubmit} mode="contained">
+          <Button onPress={onPressAdd} mode="contained">
             Add
           </Button>
           <Button onPress={onPressCancel}>Cancel</Button>

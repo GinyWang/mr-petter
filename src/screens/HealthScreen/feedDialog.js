@@ -5,13 +5,15 @@ import { PI_CONTROL_LAMBDA_NAME, REGION } from "../../constants.js";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 
 const FeedDialog = (props) => {
-  const { visible, hideDialog, credentials } = props;
+  const { visible, hideDialog, credentials, toggleSnackBar } = props;
   const onPressCancel = () => {
     hideDialog("FEED");
   };
   const onPressYes = async () => {
     hideDialog("FEED");
+    toggleSnackBar(true, "Feeding...");
     await invokeFeed();
+    toggleSnackBar(true, "Feeding Complete!");
   };
   const invokeFeed = async () => {
     const config = {
