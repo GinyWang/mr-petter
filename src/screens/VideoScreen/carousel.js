@@ -1,23 +1,36 @@
 // @ts-nocheck
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   View,
   ScrollView,
   Animated,
   Dimensions,
-  ImageBackground,
   StyleSheet,
 } from "react-native";
 import { Text } from "react-native-paper";
+import { Video, ResizeMode } from "expo-av";
 
 const OFFSET = 40;
 const ITEM_WIDTH = Dimensions.get("window").width - OFFSET * 2;
 const ITEM_HEIGHT = 200;
+// const { width, height } = Dimensions.get("window");
 
 const Carousel = (props) => {
   const { cards } = props;
   const scrollX = React.useRef(new Animated.Value(0)).current;
+  const video = useRef(null);
+  const [videoIndex, setVideoIndex] = useState(0);
+  useEffect(() => {
+    scrollX.addListener(({ value }) => {
+      const val = Math.round(value / ITEM_WIDTH);
+      console.log(val);
+      setVideoIndex(val);
+    });
 
+    return () => {
+      scrollX.removeAllListeners();
+    };
+  }, []);
   return (
     <ScrollView
       horizontal={true}
@@ -34,6 +47,7 @@ const Carousel = (props) => {
       scrollEventThrottle={12}
     >
       {cards.map((item, idx) => {
+        console.log(idx);
         const inputRange = [
           (idx - 1) * ITEM_WIDTH,
           idx * ITEM_WIDTH,
@@ -65,10 +79,18 @@ const Carousel = (props) => {
                 transform: [{ scale: translate }],
               }}
             >
-              <ImageBackground
-                source={item.posterUrl}
-                style={styles.ImageBackground}
-                imageStyle={{ borderRadius: 6 }}
+              <Video
+                ref={video}
+                style={{
+                  width: ITEM_WIDTH,
+                  height: ITEM_HEIGHT,
+                }}
+                source={{
+                  uri: item.uri, // the video file
+                }}
+                useNativeControls
+                resizeMode={ResizeMode.CONTAIN}
+                shouldPlay={idx == videoIndex}
               />
             </Animated.View>
           </View>

@@ -1,12 +1,24 @@
 import React from "react";
-import { Animated, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import Carousel from "./carousel";
 
 const cards = [
-  { title: "Dog 1", posterUrl: require("./images/dog1.jpg") },
-  { title: "Dog 2", posterUrl: require("./images/dog2.jpeg") },
-  { title: "Dog 3", posterUrl: require("./images/dog3.jpg") },
-  { title: "Dog 4", posterUrl: require("./images/dog4.jpg") },
+  {
+    title: "Dog 1",
+    uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+  },
+  {
+    title: "Dog 2",
+    uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+  },
+  {
+    title: "Dog 3",
+    uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  },
+  {
+    title: "Dog 4",
+    uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+  },
 ];
 
 export default function AdvancedCardCarousel() {
