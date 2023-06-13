@@ -47,7 +47,6 @@ const Carousel = (props) => {
       scrollEventThrottle={12}
     >
       {cards.map((item, idx) => {
-        console.log(idx);
         const inputRange = [
           (idx - 1) * ITEM_WIDTH,
           idx * ITEM_WIDTH,

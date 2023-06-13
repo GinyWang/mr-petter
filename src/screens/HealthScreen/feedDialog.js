@@ -32,7 +32,7 @@ const FeedDialog = (props) => {
       const client = new LambdaClient(config);
       const command = new InvokeCommand(input);
       const res = await client.send(command);
-      console.log(res);
+      // console.log(res);
     } catch (e) {
       console.error(e);
     }
