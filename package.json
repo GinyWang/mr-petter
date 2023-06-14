@@ -9,7 +9,6 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@aws-amplify/ui-react": "^4.6.4",
     "@aws-sdk/client-lambda": "^3.347.1",
     "@aws-sdk/client-sns": "^3.352.0",
     "@react-native-async-storage/async-storage": "^1.18.1",
@@ -26,7 +25,6 @@
     "expo-av": "~12.0.4",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
-    "react-hook-form": "^7.44.3",
     "react-native": "0.71.8",
     "react-native-calendars": "^1.1298.0",
     "react-native-gesture-handler": "^2.11.0",

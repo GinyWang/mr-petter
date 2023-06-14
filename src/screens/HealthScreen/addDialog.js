@@ -3,7 +3,6 @@ import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { Text, Button, Dialog, Portal } from "react-native-paper";
 import { View } from "react-native";
 import { PI_CONTROL_LAMBDA_NAME, REGION } from "../../constants.js";
-import { useForm, Controller } from "react-hook-form";
 import { makeLambdaPayload } from "../../utils.js";
 import DateTimePicker from "@react-native-community/datetimepicker";
 const AddDialog = (props) => {
