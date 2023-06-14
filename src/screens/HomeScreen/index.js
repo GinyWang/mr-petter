@@ -7,8 +7,8 @@ const HomeScreen = ({ email, phone, handleSignout }) => {
     <SafeAreaView>
       <View style={styles.container}>
         <Text style={styles.welcomeText}>Welcome, </Text>
-        <Text style={styles.infoText}>Phone Number:{phone}</Text>
-        <Text style={styles.infoText}>Email: {email}</Text>
+        <Text style={styles.infoText}>Phone:{phone}</Text>
+        <Text style={styles.infoText}>Email:{email}</Text>
         <Button icon="hand-wave" mode="contained" onPress={handleSignout}>
           Sign Out
         </Button>
