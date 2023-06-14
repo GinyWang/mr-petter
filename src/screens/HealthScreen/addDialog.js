@@ -14,7 +14,6 @@ const AddDialog = (props) => {
   };
   const onPressAdd = () => {
     hideDialog("ADD");
-    console.log(timePicked, typeof timePicked);
     //todo: submit reminder to backend
     toggleSnackBar(
       true,

@@ -1,46 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
-import Carousel from "./carousel";
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { REGION } from "../../constants";
-
-const cards = [
-  {
-    title: "Dog 1",
-    uri: "https://team07-final.s3.amazonaws.com/interaction/2023-06-12%2C22%3A42.mp4",
-  },
-  {
-    title: "Dog 2",
-    uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-  },
-  {
-    title: "Dog 3",
-    uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-  },
-  {
-    title: "Dog 4",
-    uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-  },
-];
+import VideoCarousel from "./videoCarousel";
+import { S3Client, ListObjectsCommand } from "@aws-sdk/client-s3";
+import { REGION, S3_BUCKET_NAME } from "../../constants";
 
 export default function VideoScreen({ credentials }) {
-  // useEffect( () => {
-  //   const config = {
-  //     region: REGION,
-  //     credentials: credentials,
-  //   };
-  //   try {
-  //     const client = new S3Client(config);
-  //     const command = new GetObjectCommand(input);
-  //     const response = await client.send(command);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // },[]);
+  const [videoUrls, setVideoUrls] = useState([]); // [ { title: string, uri: string }
+
+  useEffect(() => {
+    const fetchVideoUrls = async () => {
+      try {
+        const s3Client = new S3Client({
+          region: REGION,
+          credentials: credentials,
+        });
+        // Fetch the list of objects in the S3 bucket
+        const listObjectsCommand = new ListObjectsCommand({
+          Bucket: S3_BUCKET_NAME,
+          Prefix: "interaction/",
+        });
+        const { Contents } = await s3Client.send(listObjectsCommand);
+
+        // Filter the objects to include only .mp4 files
+        const mp4Files = Contents.filter((object) =>
+          object.Key.endsWith(".mp4")
+        );
+
+        // Sort the files by LastModified in descending order
+        // @ts-ignore
+        mp4Files.sort((a, b) => b.LastModified - a.LastModified);
+
+        // Get the URLs of the recent 5 videos
+        const recentVideos = mp4Files.slice(0, 5).map((file) => ({
+          title: file.Key.split("/").pop(),
+          uri: `https://${S3_BUCKET_NAME}.s3.${REGION}.amazonaws.com/${file.Key}`,
+        }));
+
+        setVideoUrls(recentVideos);
+      } catch (error) {
+        console.error("Error fetching video URLs:", error);
+      }
+    };
+
+    fetchVideoUrls();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Carousel cards={cards} />
+      <VideoCarousel videoUrls={videoUrls} />
     </SafeAreaView>
   );
 }

@@ -4,3 +4,4 @@ export const TRACKER_NAME = "PetTracker";
 export const TRACKER_DEVICE_ID = "Team07-Pi";
 export const FIND_PET_SNS_TOPIC = "Team07FindPet";
 export const ROUTE_CALCULATOR = "Team07FindPet";
+export const S3_BUCKET_NAME = "team07-final";

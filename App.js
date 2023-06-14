@@ -41,7 +41,7 @@ const App = () => {
       }
       let location = await ExpoLocation.getCurrentPositionAsync({});
       setUserLocation(location);
-      console.log(location);
+      // console.log(location);
     })();
   }, []);
 

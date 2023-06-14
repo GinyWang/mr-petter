@@ -10,20 +10,20 @@ import {
 import { Text } from "react-native-paper";
 import { Video, ResizeMode } from "expo-av";
 
+
 const OFFSET = 40;
 const ITEM_WIDTH = Dimensions.get("window").width - OFFSET * 2;
 const ITEM_HEIGHT = 200;
 // const { width, height } = Dimensions.get("window");
 
-const Carousel = (props) => {
-  const { cards } = props;
+const VideoCarousel = (props) => {
+  const { videoUrls } = props;
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const video = useRef(null);
   const [videoIndex, setVideoIndex] = useState(0);
   useEffect(() => {
     scrollX.addListener(({ value }) => {
       const val = Math.round(value / ITEM_WIDTH);
-      console.log(val);
       setVideoIndex(val);
     });
 
@@ -46,7 +46,7 @@ const Carousel = (props) => {
       )}
       scrollEventThrottle={12}
     >
-      {cards.map((item, idx) => {
+      {videoUrls?.map((item, idx) => {
         const inputRange = [
           (idx - 1) * ITEM_WIDTH,
           idx * ITEM_WIDTH,
@@ -64,26 +64,21 @@ const Carousel = (props) => {
         });
 
         return (
-          <View key={item.title}>
-            <Text variant="titleLarge" style={styles.Title}>
-              {item.title}
-            </Text>
+          <View key={item.title} style={styles.carouselItem}>
+            <Text style={styles.titleText}>{item.title}</Text>
             <Animated.View
               style={{
                 width: ITEM_WIDTH,
                 height: ITEM_HEIGHT,
                 marginLeft: idx === 0 ? OFFSET : undefined,
-                marginRight: idx === cards.length - 1 ? OFFSET : undefined,
+                marginRight: idx === videoUrls.length - 1 ? OFFSET : undefined,
                 opacity: opacity,
                 transform: [{ scale: translate }],
               }}
             >
               <Video
                 ref={video}
-                style={{
-                  width: ITEM_WIDTH,
-                  height: ITEM_HEIGHT,
-                }}
+                style={styles.videoContainer}
                 source={{
                   uri: item.uri, // the video file
                 }}
@@ -99,15 +94,34 @@ const Carousel = (props) => {
   );
 };
 
-export default Carousel;
+export default VideoCarousel;
 
 const styles = StyleSheet.create({
-  ScrollView: { marginTop: 40, paddingHorizontal: 0 },
-  Title: {
-    color: "white",
-    marginLeft: 40,
-    marginBottom: 20,
-    fontWeight: "bold",
+  carouselItem: {
+    alignItems: "center",
   },
-  ImageBackground: { flex: 1, resizeMode: "cover", justifyContent: "center" },
+  titleText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  videoContainer: {
+    width: ITEM_WIDTH,
+    height: ITEM_HEIGHT,
+    marginBottom: 20,
+  },
+  video: {
+    flex: 1,
+  },
+  ScrollView: { marginTop: 40, paddingHorizontal: 0 },
 });
+// const styles = StyleSheet.create({
+//   ScrollView: { marginTop: 40, paddingHorizontal: 0 },
+//   Title: {
+//     color: "white",
+//     marginLeft: 40,
+//     marginBottom: 20,
+//     fontWeight: "bold",
+//   },
+// });

@@ -3,7 +3,6 @@ import { StyleSheet, View, Text } from "react-native";
 
 const AgendaItem = (props) => {
   const { item } = props;
-  console.log("item", item);
 
   return (
     <View style={styles.item}>

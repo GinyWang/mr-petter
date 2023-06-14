@@ -91,7 +91,6 @@ const MapScreen = (props) => {
       });
       const command = new GetDevicePositionCommand(input);
       const response = await client.send(command);
-      console.log(response);
       if (
         response.Position[0] != petLocation?.long ||
         response.Position[1] != petLocation?.lat

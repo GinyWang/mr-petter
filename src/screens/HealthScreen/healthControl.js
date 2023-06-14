@@ -13,10 +13,6 @@ const HealthControl = (props) => {
 
   const onStateChange = ({ open }) => setFabOpen(open);
 
-  React.useEffect(() => {
-    console.log(dialogVisible);
-  }, [dialogVisible]);
-
   return (
     <PaperProvider>
       <Portal>

@@ -8,11 +8,6 @@ const Map = (props) => {
   const mapViewRef = useRef(null);
 
   useEffect(() => {
-    console.log({ petLocation });
-  }, [petLocation]);
-
-  useEffect(() => {
-    console.log("zoom");
     if (userLocation != null && !isInitialZoomedRef.current) {
       mapViewRef.current.animateToRegion({
         latitude: userLocation.coords.latitude,

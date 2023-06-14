@@ -53,7 +53,7 @@ const AudioControl = (props) => {
     <>
       <View style={styles.container}>
         <FAB icon="skip-previous" onPress={() => onPressPrev()} />
-        <FAB icon={playing ? "pause" : "play"} onPress={() => togglePlay()} />
+        <FAB icon="play-pause" onPress={() => togglePlay()} />
         <FAB icon="skip-next" onPress={() => onPressNext()} />
       </View>
     </>
