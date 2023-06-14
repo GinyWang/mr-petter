@@ -18,32 +18,38 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
   const [credentials, setCredentials] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     const fetchCredentials = async () => {
       try {
         setCredentials(await Auth.currentUserCredentials());
+        setUserInfo(await Auth.currentUserInfo());
       } catch (e) {
         console.error(e);
       }
     };
     fetchCredentials();
   }, []);
-
   return (
     <NavigationContainer>
       <SafeAreaProvider>
         <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomeScreen} />
+          {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
           <Tab.Screen
             name="Map"
-            children={() => <MapScreen credentials={credentials} />}
+            children={() => (
+              <MapScreen credentials={credentials} userInfo={userInfo} />
+            )}
           />
           <Tab.Screen
             name="Audio"
             children={() => <AudioScreen credentials={credentials} />}
           />
-          <Tab.Screen name="Video" children={() => <VideoScreen />} />
+          <Tab.Screen
+            name="Video"
+            children={() => <VideoScreen credentials={credentials} />}
+          />
           <Tab.Screen
             name="Health"
             children={() => <HealthScreen credentials={credentials} />}
