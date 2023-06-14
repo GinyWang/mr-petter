@@ -16,14 +16,19 @@ import {
 } from "../../constants";
 
 const MapScreen = (props) => {
-  const { credentials, userInfo } = props;
+  const { credentials, userInfo, userLocation } = props;
   const [petLocation, setPetLocation] = useState(null);
   const [isTracking, setIsTracking] = useState(false);
   const [enableLostAlert, setEnableLostAlert] = useState(false);
   const interval = useRef(null);
 
   useEffect(() => {
-    if (isTracking && enableLostAlert && petLocation != null) {
+    if (
+      isTracking &&
+      enableLostAlert &&
+      petLocation != null &&
+      userLocation != null
+    ) {
       calculateRouteToPet();
     }
   }, [petLocation]);
@@ -35,7 +40,10 @@ const MapScreen = (props) => {
     });
     const input = {
       CalculatorName: ROUTE_CALCULATOR,
-      DeparturePosition: [120.9, 24.795],
+      DeparturePosition: [
+        userLocation.coords.longitude,
+        userLocation.coords.latitude,
+      ],
       DestinationPosition: [petLocation.long, petLocation.lat],
       TravelMode: "Walking",
     };
@@ -147,7 +155,7 @@ const MapScreen = (props) => {
           <Text style={{ marginTop: 8 }}>Enable Lost Alert</Text>
         </View>
       </View>
-      <Map petLocation={petLocation} />
+      <Map petLocation={petLocation} userLocation={userLocation} />
     </SafeAreaView>
   );
 };

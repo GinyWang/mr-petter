@@ -5,7 +5,7 @@ import awsExports from "./src/aws-exports";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-
+import * as ExpoLocation from "expo-location";
 //components
 import HomeScreen from "./src/screens/HomeScreen";
 import MapScreen from "./src/screens/MapScreen";
@@ -18,9 +18,11 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
   const [credentials, setCredentials] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
+    // aws user auth
     const fetchCredentials = async () => {
       try {
         setCredentials(await Auth.currentUserCredentials());
@@ -30,7 +32,19 @@ const App = () => {
       }
     };
     fetchCredentials();
+    // get current location
+    (async () => {
+      let { status } = await ExpoLocation.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
+        return;
+      }
+      let location = await ExpoLocation.getCurrentPositionAsync({});
+      setUserLocation(location);
+      console.log(location);
+    })();
   }, []);
+
   return (
     <NavigationContainer>
       <SafeAreaProvider>
@@ -39,7 +53,11 @@ const App = () => {
           <Tab.Screen
             name="Map"
             children={() => (
-              <MapScreen credentials={credentials} userInfo={userInfo} />
+              <MapScreen
+                credentials={credentials}
+                userInfo={userInfo}
+                userLocation={userLocation}
+              />
             )}
           />
           <Tab.Screen
