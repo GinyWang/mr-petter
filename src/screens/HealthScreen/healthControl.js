@@ -22,8 +22,8 @@ const HealthControl = (props) => {
           icon={fabOpen ? "calendar-today" : "dog"}
           actions={[
             {
-              icon: "plus",
-              label: "Add",
+              icon: "bell",
+              label: "Remind",
               onPress: () => showDialog("ADD"),
             },
             {

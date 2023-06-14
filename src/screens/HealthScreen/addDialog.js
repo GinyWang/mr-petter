@@ -12,13 +12,43 @@ const AddDialog = (props) => {
   const onPressCancel = () => {
     hideDialog("ADD");
   };
-  const onPressAdd = () => {
+  const onPressAdd = async () => {
     hideDialog("ADD");
-    //todo: submit reminder to backend
+    //submit reminder to backend
+    await invokeAddReminder();
     toggleSnackBar(
       true,
       `Feeding Reminder on ${timePicked.toTimeString()} Added `
     );
+  };
+  const invokeAddReminder = async () => {
+    const config = {
+      region: REGION,
+      credentials: credentials,
+    };
+    const formattedTime = timePicked.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    const input = {
+      // InvocationRequest
+      FunctionName: PI_CONTROL_LAMBDA_NAME,
+      Payload: makeLambdaPayload({
+        type: "health/feeding",
+        scheduled: "Yes",
+        action: "feed",
+        scheduled_time: formattedTime,
+      }),
+    };
+    try {
+      const client = new LambdaClient(config);
+      const command = new InvokeCommand(input);
+      const res = await client.send(command);
+      // console.log("schedule reminder", res);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (

@@ -7,6 +7,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import * as ExpoLocation from "expo-location";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 //components
 import HomeScreen from "./src/screens/HomeScreen";
 import MapScreen from "./src/screens/MapScreen";
