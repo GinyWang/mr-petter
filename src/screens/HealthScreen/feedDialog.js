@@ -25,6 +25,8 @@ const FeedDialog = (props) => {
       FunctionName: PI_CONTROL_LAMBDA_NAME,
       Payload: makeLambdaPayload({
         type: "health/feeding",
+        scheduled: "No",
+        scheduled_time: "None",
         action: "feed",
       }),
     };
