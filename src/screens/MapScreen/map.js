@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Circle, Marker } from "react-native-maps";
 import { StyleSheet, View } from "react-native";
 //todo: array of pet Locations, pet info, geo fence
 const Map = (props) => {
-  const { petLocation, userLocation } = props;
+  const { petLocation, userLocation, isTracking, enableLostAlert } = props;
   const isInitialZoomedRef = useRef(false);
   const mapViewRef = useRef(null);
 
@@ -33,6 +33,17 @@ const Map = (props) => {
               longitude: petLocation.long,
             }}
             title={petLocation.title}
+          />
+        )}
+        {userLocation && isTracking && enableLostAlert && (
+          <Circle
+            center={{
+              latitude: userLocation.coords.latitude,
+              longitude: userLocation.coords.longitude,
+            }}
+            radius={200}
+            fillColor={"rgba(170, 255, 0, 0.2)"}
+            strokeColor={"rgba(170, 255, 0, 0.8)"}
           />
         )}
       </MapView>

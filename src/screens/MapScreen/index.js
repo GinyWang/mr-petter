@@ -1,5 +1,6 @@
+// @ts-nocheck
 import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, View, TouchableOpacity } from "react-native";
 import { SNSClient, PublishCommand, $Command } from "@aws-sdk/client-sns";
 import { Switch, Text } from "react-native-paper";
 import {
@@ -53,7 +54,7 @@ const MapScreen = (props) => {
       const response = await client.send(command);
       console.log("calculate route", response); //Response.Summary.Distance
       //send text alert
-      if (response.Summary.Distance > 0.3) {
+      if (response.Summary.Distance > 0.2) {
         console.log("send text to ", userInfo);
         await sendLostAlert(response.Summary.Distance);
         setEnableLostAlert(false);
@@ -137,7 +138,6 @@ const MapScreen = (props) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-evenly",
-          marginHorizontal: 16,
           marginTop: 16,
         }}
       >
@@ -145,18 +145,45 @@ const MapScreen = (props) => {
           <Switch value={isTracking} onValueChange={toggleTracking} />
           <Text style={{ marginTop: 8 }}>Start Tracking</Text>
         </View>
-        <View>
-          <Switch
-            value={isTracking && enableLostAlert}
-            onValueChange={toggleEnableLostAlert}
-            disabled={!isTracking}
-          />
-          <Text style={{ marginTop: 8 }}>Enable Lost Alert</Text>
-        </View>
+
+        {isTracking && (
+          <View>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  backgroundColor: !enableLostAlert ? "red" : "gray",
+                },
+              ]}
+              activeOpacity={0.2}
+              onPress={toggleEnableLostAlert}
+              disabled={!isTracking}
+            >
+              <Text style={styles.buttonText}>{"Lost Alert"}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
-      <Map petLocation={petLocation} userLocation={userLocation} />
+      <Map
+        petLocation={petLocation}
+        userLocation={userLocation}
+        isTracking={isTracking}
+        enableLostAlert={enableLostAlert}
+      />
     </SafeAreaView>
   );
 };
 
 export default MapScreen;
+const styles = StyleSheet.create({
+  button: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+});
