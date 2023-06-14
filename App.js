@@ -57,65 +57,69 @@ const App = () => {
   return (
     <NavigationContainer>
       <SafeAreaProvider>
-        <Tab.Navigator>
-          <Tab.Screen
-            name="Home"
-            children={() => (
-              <HomeScreen
-                phone={userInfo?.attributes.phone_number}
-                email={userInfo?.attributes.email}
-                handleSignout={handleSignout}
-              />
-            )}
-            options={{
-              tabBarIcon: ({ color, size }) => {
-                return <Icon name="home" size={size} color={color} />;
-              },
-            }}
-          />
-          <Tab.Screen
-            name="Map"
-            children={() => (
-              <MapScreen
-                credentials={credentials}
-                userInfo={userInfo}
-                userLocation={userLocation}
-              />
-            )}
-            options={{
-              tabBarIcon: ({ color, size }) => {
-                return <Icon name="map-marker" size={size} color={color} />;
-              },
-            }}
-          />
-          <Tab.Screen
-            name="Audio"
-            children={() => <AudioScreen credentials={credentials} />}
-            options={{
-              tabBarIcon: ({ color, size }) => {
-                return <Icon name="music" size={size} color={color} />;
-              },
-            }}
-          />
-          <Tab.Screen
-            name="Video"
-            children={() => <VideoScreen credentials={credentials} />}
-            options={{
-              tabBarIcon: ({ color, size }) => {
-                return <Icon name="video" size={size} color={color} />;
-              },
-            }}
-          />
-          <Tab.Screen
-            name="Health"
-            children={() => <HealthScreen credentials={credentials} />}
-            options={{
-              tabBarIcon: ({ color, size }) => {
-                return <Icon name="calendar-check" size={size} color={color} />;
-              },
-            }}
-          />
-        </Tab.Navigator>
+        {credentials && userInfo && (
+          <Tab.Navigator>
+            <Tab.Screen
+              name="Home"
+              children={() => (
+                <HomeScreen
+                  phone={userInfo?.attributes.phone_number}
+                  email={userInfo?.attributes.email}
+                  handleSignout={handleSignout}
+                />
+              )}
+              options={{
+                tabBarIcon: ({ color, size }) => {
+                  return <Icon name="home" size={size} color={color} />;
+                },
+              }}
+            />
+            <Tab.Screen
+              name="Map"
+              children={() => (
+                <MapScreen
+                  credentials={credentials}
+                  userInfo={userInfo}
+                  userLocation={userLocation}
+                />
+              )}
+              options={{
+                tabBarIcon: ({ color, size }) => {
+                  return <Icon name="map-marker" size={size} color={color} />;
+                },
+              }}
+            />
+            <Tab.Screen
+              name="Audio"
+              children={() => <AudioScreen credentials={credentials} />}
+              options={{
+                tabBarIcon: ({ color, size }) => {
+                  return <Icon name="music" size={size} color={color} />;
+                },
+              }}
+            />
+            <Tab.Screen
+              name="Video"
+              children={() => <VideoScreen credentials={credentials} />}
+              options={{
+                tabBarIcon: ({ color, size }) => {
+                  return <Icon name="video" size={size} color={color} />;
+                },
+              }}
+            />
+            <Tab.Screen
+              name="Health"
+              children={() => <HealthScreen credentials={credentials} />}
+              options={{
+                tabBarIcon: ({ color, size }) => {
+                  return (
+                    <Icon name="calendar-check" size={size} color={color} />
+                  );
+                },
+              }}
+            />
+          </Tab.Navigator>
+        )}
       </SafeAreaProvider>
     </NavigationContainer>
   );

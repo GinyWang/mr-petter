@@ -41,7 +41,7 @@ const HealthScreen = (props) => {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <HealthCalendar />
+        <HealthCalendar credentials={credentials} />
         <HealthControl showDialog={showDialog} hideDialog={hideDialog} />
         <FeedDialog
           credentials={credentials}

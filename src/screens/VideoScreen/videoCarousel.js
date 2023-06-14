@@ -14,7 +14,6 @@ import { Video, ResizeMode } from "expo-av";
 const OFFSET = 40;
 const ITEM_WIDTH = Dimensions.get("window").width - OFFSET * 2;
 const ITEM_HEIGHT = 200;
-// const { width, height } = Dimensions.get("window");
 
 const VideoCarousel = (props) => {
   const { videoUrls } = props;
